@@ -3,127 +3,245 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IP 확인</title>
+
+<title>서준과의 친함 테스트</title>
+
+<meta name="description" content="나는 과연 서준과 얼마나 친할까?">
+
+<meta property="og:title" content="서준과의 친함 테스트">
+<meta property="og:description" content="나는 과연 서준과 얼마나 친할까?">
+<meta property="og:type" content="website">
 
 <style>
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    background: #101010;
-    color: white;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center;
+  margin: 0;
+  background: #101014;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
 }
 
-.container {
-    width: 90%;
-    max-width: 400px;
-    padding: 30px;
-    background: #1c1c1c;
-    border-radius: 15px;
+.box {
+  width: 90%;
+  max-width: 400px;
+  padding: 35px 22px;
+  background: #1d1d27;
+  border: 1px solid #39394c;
+  border-radius: 20px;
 }
 
-h1 {
-    font-size: 25px;
+h2 {
+  font-size: 24px;
 }
 
 p {
-    color: #aaa;
-    line-height: 1.7;
+  color: #bbb;
+  line-height: 1.6;
 }
 
 button {
-    width: 100%;
-    padding: 15px;
-    margin-top: 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
+  width: 100%;
+  padding: 15px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 10px;
+  background: #7545d8;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
 }
 
-.yes {
-    background: #2878ff;
-    color: white;
+button:active {
+  opacity: .7;
 }
 
-.no {
-    background: #444;
-    color: white;
-}
-
-#result {
-    display: none;
-}
-
-.ip {
-    font-size: 25px;
-    color: #4c91ff;
-    font-weight: bold;
-    word-break: break-all;
-    margin-top: 25px;
+#ip {
+  font-size: 23px;
+  color: #b99aff;
+  word-break: break-all;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container" id="first">
+<div class="box">
 
-    <h1>IP 주소 확인</h1>
+<h2 id="title">서준과 친합니까?</h2>
 
-    <p>
-        버튼을 선택하면 현재 접속 중인 기기의
-        공인 IP 주소를 조회합니다.
-        어느 버튼을 선택해도 조회가 진행됩니다.
-        IP 주소는 별도로 저장하지 않습니다.
-    </p>
+<p id="description">
+서준과의 친함 테스트
+</p>
 
-    <button class="yes" onclick="showIP()">
-        동의
-    </button>
-
-    <button class="no" onclick="showIP()">
-        비동의
-    </button>
-
+<div id="buttons">
+<button onclick="answer(true)">응</button>
+<button onclick="answer(false)">아니</button>
 </div>
-
-<div class="container" id="result">
-
-    <h1>IP 확인 완료</h1>
-
-    <p>현재 접속 중인 기기의 IP 주소입니다.</p>
-
-    <div class="ip" id="ip">확인 중...</div>
 
 </div>
 
 <script>
-async function showIP() {
 
-    document.getElementById("first").style.display = "none";
-    document.getElementById("result").style.display = "block";
+let step = 0;
 
-    try {
-        const response = await fetch("https://api.ipify.org?format=json");
-        const data = await response.json();
+function show(title, description, options) {
 
-        document.getElementById("ip").textContent = data.ip;
+  document.getElementById("title").innerText = title;
 
-    } catch (error) {
-        document.getElementById("ip").textContent =
-        "IP를 불러오지 못했습니다.";
-    }
+  document.getElementById("description").innerText =
+    description || "";
+
+  const area = document.getElementById("buttons");
+
+  area.innerHTML = "";
+
+  options.forEach(option => {
+
+    const button = document.createElement("button");
+
+    button.innerText = option.text;
+
+    button.onclick = option.action;
+
+    area.appendChild(button);
+
+  });
+
 }
+
+function leave() {
+
+  show(
+    "테스트 종료",
+    "참여해줘서 고마워요!",
+    []
+  );
+
+}
+
+function answer(yes) {
+
+  if (step === 0) {
+
+    if (!yes) return leave();
+
+    step = 1;
+
+    show("서준은 잘생겼읍니까?", "", [
+      {text:"응", action:()=>answer(true)},
+      {text:"아니", action:()=>leave()}
+    ]);
+
+  }
+
+  else if (step === 1) {
+
+    if (!yes) return leave();
+
+    step = 2;
+
+    show("서준은 똥쟁이입니까?", "", [
+      {text:"응", action:()=>leave()},
+      {text:"아니", action:()=>answer(false)}
+    ]);
+
+  }
+
+  else if (step === 2) {
+
+    if (yes) return leave();
+
+    step = 3;
+
+    show("서준은 못상겼읍니까?", "", [
+      {text:"응", action:()=>leave()},
+      {text:"아니", action:()=>answer(false)}
+    ]);
+
+  }
+
+  else if (step === 3) {
+
+    if (yes) return leave();
+
+    step = 4;
+
+    show("서준을 신뢰합니까?", "", [
+      {text:"응", action:()=>showIP()},
+      {text:"아니", action:()=>why()}
+    ]);
+
+  }
+
+}
+
+function why() {
+
+  show("왜?", "", [
+    {text:"그냥", action:()=>showIP()},
+    {text:"몰라", action:()=>showIP()},
+    {text:"너가 싫어", action:()=>showIP()}
+  ]);
+
+}
+
+function showIP() {
+
+  show(
+    "IP 주소 확인",
+    "다음 버튼을 누르면 현재 접속 기기의 공인 IP 주소가 표시됩니다.",
+    [
+      {text:"IP 확인하기", action:fetchIP}
+    ]
+  );
+
+}
+
+async function fetchIP() {
+
+  document.getElementById("description").innerText =
+    "IP 주소 확인 중...";
+
+  document.getElementById("buttons").innerHTML = "";
+
+  try {
+
+    const response = await fetch(
+      "https://api.ipify.org?format=json"
+    );
+
+    const data = await response.json();
+
+    document.getElementById("description").innerText =
+      "현재 접속 기기의 공인 IP 주소";
+
+    document.getElementById("buttons").innerHTML =
+      '<div id="ip"></div>';
+
+    document.getElementById("ip").innerText =
+      data.ip;
+
+  }
+
+  catch {
+
+    document.getElementById("description").innerText =
+      "IP 확인에 실패했습니다.";
+
+  }
+
+}
+
 </script>
 
 </body>
+
 </html>
