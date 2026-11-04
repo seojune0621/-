@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP 확인</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #101010;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    background: #1c1c1c;
+    border-radius: 15px;
+}
+
+h1 {
+    font-size: 25px;
+}
+
+p {
+    color: #aaa;
+    line-height: 1.7;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.yes {
+    background: #2878ff;
+    color: white;
+}
+
+.no {
+    background: #444;
+    color: white;
+}
+
+#result {
+    display: none;
+}
+
+.ip {
+    font-size: 25px;
+    color: #4c91ff;
+    font-weight: bold;
+    word-break: break-all;
+    margin-top: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="first">
+
+    <h1>IP 주소 확인</h1>
+
+    <p>
+        버튼을 선택하면 현재 접속 중인 기기의
+        공인 IP 주소를 조회합니다.
+        어느 버튼을 선택해도 조회가 진행됩니다.
+        IP 주소는 별도로 저장하지 않습니다.
+    </p>
+
+    <button class="yes" onclick="showIP()">
+        동의
+    </button>
+
+    <button class="no" onclick="showIP()">
+        비동의
+    </button>
+
+</div>
+
+<div class="container" id="result">
+
+    <h1>IP 확인 완료</h1>
+
+    <p>현재 접속 중인 기기의 IP 주소입니다.</p>
+
+    <div class="ip" id="ip">확인 중...</div>
+
+</div>
+
+<script>
+async function showIP() {
+
+    document.getElementById("first").style.display = "none";
+    document.getElementById("result").style.display = "block";
+
+    try {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+
+        document.getElementById("ip").textContent = data.ip;
+
+    } catch (error) {
+        document.getElementById("ip").textContent =
+        "IP를 불러오지 못했습니다.";
+    }
+}
+</script>
+
+</body>
+</html>
